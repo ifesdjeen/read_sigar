@@ -22,7 +22,7 @@ dnl     Makefile
 dnl     src/Makefile
 dnl ])
 
-PKG_CHECK_MODULES([SIGAR], [libsigar],, AC_MSG_ERROR([libsigar is required.]))
+PKG_CHECK_MODULES([SIGAR], [libsigar],, AC_MSG_ERROR([libsigar is required.])) ## O_O check if libsigar.pc is in place
 
 AC_C_CONST
 
