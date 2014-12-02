@@ -11,13 +11,19 @@
 #include "network.h"
 
 #include "sigar.h"
+#include "sigar_format.h"
 
 sigar_t *sigar;
+sigar_cpu_t cpu_jiffles_snapshot;
 
 static int init (void)
 {
+  // TODO: add error handling
   sigar_open(&sigar);
 
+  if (SIGAR_OK != sigar_cpu_get(sigar, &cpu_jiffles_snapshot)) {
+    return (-1);
+  }
   return (0);
 }
 
@@ -49,25 +55,42 @@ submit_percent(const char *type_instance, gauge_t percent)
 }
 
 static void
+submit_absolute(const char *type_instance, absolute_t absolute)
+{
+	value_t value;
+
+	value.absolute = absolute;
+	submit_value ("absolute", type_instance, value);
+}
+
+static void
 submit_derive(const char *type_instance, derive_t derive)
 {
 	value_t value;
 
 	value.derive = derive;
-	submit_value ("derive", type_instancetype, value);
+	submit_value ("derive", type_instance, value);
 }
 
 static int sigar_read (void)
 {
-  sigar_cpu_t cpu;
+  sigar_cpu_t cpu_jiffles_current;
 
-  if (SIGAR_OK == sigar_cpu_get(sigar, &cpu)) {
-    submit_percent("system.cpu.user",  cpu.user);
-    submit_percent("system.cpu.sys",   cpu.sys);
-    submit_percent("system.cpu.nice",  cpu.nice);
-    submit_percent("system.cpu.idle",  cpu.idle);
+  if (SIGAR_OK == sigar_cpu_get(sigar, &cpu_jiffles_current)) {
+    sigar_cpu_perc_t perc;
+    sigar_cpu_perc_calculate(&cpu_jiffles_snapshot, &cpu_jiffles_current, &perc);
+
+    submit_percent("system.cpu.user",     perc.user);
+    submit_percent("system.cpu.sys",      perc.sys);
+    submit_percent("system.cpu.nice",     perc.nice);
+    submit_percent("system.cpu.idle",     perc.idle);
+    submit_percent("system.cpu.wait",     perc.wait);
+    submit_percent("system.cpu.combined", perc.combined);
   }
+
+  return (0);
 }
+
 void
 module_register (void)
 {
