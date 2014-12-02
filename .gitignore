@@ -33,3 +33,4 @@ glibc/
 collectd/
 nanomsg/
 *so
+sigar/
