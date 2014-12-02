@@ -34,7 +34,19 @@ Sigar and puts it into Collectd.
   * `system.net.tcp_outbound_total`: count (absolute)
   * `system.net.all_inbound_total`: count (absolute)
   * `system.net.all_outbound_total`: count (absolute)
-  
+
+## TCP
+
+  * `system.tcp.active_opens`: count (absolute)
+  * `system.tcp.passive_opens`: count (absolute)
+  * `system.tcp.attempt_fails`: count (absolute)
+  * `system.tcp.estab_resets`: count (absolute)
+  * `system.tcp.curr_estab`: count (absolute)
+  * `system.tcp.in_segs`: count (absolute)
+  * `system.tcp.out_segs`: count (absolute)
+  * `system.tcp.retrans_segs`: count (absolute)
+  * `system.tcp.in_errs`: count (absolute)
+  * `system.tcp.out_rsts`: count (absolute)
 
 # Building
 
@@ -45,6 +57,9 @@ autoreconf --install
 make
 make install
 ```
+
+In order for the package to work with sigar itself, you'll have to have sigar
+installed on your machine. 
 
 # License
 
