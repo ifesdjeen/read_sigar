@@ -115,6 +115,19 @@ static int sigar_read (void)
     }
   }
 
+  {
+    sigar_net_stat_t network;
+    if (SIGAR_OK == sigar_net_stat_get(sigar, &network, SIGAR_NETCONN_SERVER|SIGAR_NETCONN_TCP)) {
+      submit_absolute ("system.net.tcp_inbound_total",  network.tcp_inbound_total);
+      submit_absolute ("system.net.tcp_outbound_total", network.tcp_outbound_total);
+      submit_absolute ("system.net.all_inbound_total",  network.all_inbound_total);
+      submit_absolute ("system.net.all_outbound_total", network.all_outbound_total);
+    } else {
+      DEBUG ("sigar_mem_get returned %i", res);
+      return (-1);
+    }
+  }
+
   return (0);
 }
 

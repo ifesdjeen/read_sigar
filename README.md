@@ -27,6 +27,13 @@ Sigar and puts it into Collectd.
   * `system.mem.actual_free`: bytes (absolute)
   * `system.mem.used_percent`: percent (gauge)
   * `system.mem.free_percent`: percent (gauge)
+
+## Network
+
+  * `system.net.tcp_inbound_total`: count (absolute)
+  * `system.net.tcp_outbound_total`: count (absolute)
+  * `system.net.all_inbound_total`: count (absolute)
+  * `system.net.all_outbound_total`: count (absolute)
   
 
 # Building
