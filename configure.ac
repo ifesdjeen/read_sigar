@@ -15,7 +15,7 @@ LT_INIT
 AC_PROG_CC
 AM_PROG_LIBTOOL
 
-AC_CONFIG_HEADERS([src/config.h])
+# AC_CONFIG_HEADERS([src/config.h])
 
 dnl AC_CONFIG_FILES([
 dnl     Makefile
