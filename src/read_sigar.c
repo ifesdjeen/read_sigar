@@ -145,23 +145,67 @@ static int sigar_read (void)
 
 
 
-  /* { */
-  /*   sigar_mem_t memory; */
-  /*   if (SIGAR_OK == sigar_mem_get(sigar, &memory)) { */
-  /*     submit_absolute ("system.mem", "ram",           "absolute", memory.ram); */
-  /*     submit_absolute ("system.mem", "total",         "absolute", memory.total); */
-  /*     submit_absolute ("system.mem", "used",          "absolute", memory.used); */
-  /*     submit_absolute ("system.mem", "free",          "absolute", memory.free); */
-  /*     submit_absolute ("system.mem", "actual_used",   "absolute", memory.actual_used); */
-  /*     submit_absolute ("system.mem", "actual_free",   "absolute", memory.actual_free); */
+  {
+    sigar_mem_t memory;
+    if (SIGAR_OK == sigar_mem_get(sigar, &memory)) {
+      {
+        value_t values[1];
+        value_list_t vl = VALUE_LIST_INIT;
 
-  /*     submit_gauge    ("system.mem.percent", "used_percent",  "percent", memory.used_percent); */
-  /*     submit_gauge    ("system.mem.percent", "free_percent",  "percent", memory.free_percent); */
-  /*   } else { */
-  /*     DEBUG ("sigar_mem_get returned %i", res); */
-  /*     return (-1); */
-  /*   } */
-  /* } */
+        vl.values = values;
+        vl.values_len = STATIC_ARRAY_SIZE (values);
+
+        sstrncpy (vl.host,            hostname_g,      sizeof (vl.host));
+        sstrncpy (vl.plugin,          "read_sigar",    sizeof (vl.plugin));
+        sstrncpy (vl.plugin_instance, "system.mem",    sizeof (vl.plugin));
+        sstrncpy (vl.type,            "absolute",      sizeof (vl.type));
+        vl.time = cdtime ();
+
+        absolute_t ram_value         = (absolute_t) memory.ram;
+        absolute_t total_value       = (absolute_t) memory.total;
+        absolute_t used_value        = (absolute_t) memory.used;
+        absolute_t free_value        = (absolute_t) memory.free;
+        absolute_t actual_used_value = (absolute_t) memory.actual_used;
+        absolute_t actual_free_value = (absolute_t) memory.actual_free;
+
+        plugin_dispatch_multivalue (&vl, 0,
+                                    "ram"          , ram_value,
+                                    "total"        , total_value,
+                                    "used"         , used_value,
+                                    "free"         , free_value,
+                                    "actual_used"  , actual_used_value,
+                                    "acttual_free" , actual_free_value,
+                                    NULL);
+      }
+
+      {
+        value_t values[1];
+        value_list_t vl = VALUE_LIST_INIT;
+
+        vl.values = values;
+        vl.values_len = STATIC_ARRAY_SIZE (values);
+
+        sstrncpy (vl.host,            hostname_g,           sizeof (vl.host));
+        sstrncpy (vl.plugin,          "read_sigar",         sizeof (vl.plugin));
+        sstrncpy (vl.plugin_instance, "system.mem.percent", sizeof (vl.plugin));
+        sstrncpy (vl.type,            "percent",            sizeof (vl.type));
+        vl.time = cdtime ();
+
+        gauge_t used_percent_value = (gauge_t) memory.used_percent;
+        gauge_t free_percent_value = (gauge_t) memory.free_percent;
+
+
+        plugin_dispatch_multivalue (&vl, 1,
+                                    "used_percent",      used_percent_value,
+                                    "free_percent",      free_percent_value,
+                                    NULL);
+
+      }
+    } else {
+      DEBUG ("sigar_mem_get returned %i", res);
+      return (-1);
+    }
+  }
 
   /* { */
   /*   sigar_net_stat_t network; */
