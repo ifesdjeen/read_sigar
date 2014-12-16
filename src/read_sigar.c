@@ -110,17 +110,16 @@ static int sigar_read (void)
         sstrncpy (vl.plugin,          "read_sigar",    sizeof (vl.plugin));
         sstrncpy (vl.plugin_instance, "system.cpu",    sizeof (vl.plugin));
         sstrncpy (vl.type,            "percent",       sizeof (vl.type));
-        /* sstrncpy (vl.type_instance,   "percent",       sizeof (vl.type_instance)); */
         vl.time = cdtime ();
 
-        gauge_t user_value = (gauge_t) perc.user;
-        gauge_t sys_value = (gauge_t) perc.sys;
-        gauge_t nice_value = (gauge_t) perc.nice;
-        gauge_t idle_value = (gauge_t) perc.idle;
-        gauge_t wait_value = (gauge_t) perc.wait;
-        gauge_t irq_value = (gauge_t) perc.irq;
+        gauge_t user_value     = (gauge_t) perc.user;
+        gauge_t sys_value      = (gauge_t) perc.sys;
+        gauge_t nice_value     = (gauge_t) perc.nice;
+        gauge_t idle_value     = (gauge_t) perc.idle;
+        gauge_t wait_value     = (gauge_t) perc.wait;
+        gauge_t irq_value      = (gauge_t) perc.irq;
         gauge_t soft_irq_value = (gauge_t) perc.soft_irq;
-        gauge_t stolen_value = (gauge_t) perc.stolen;
+        gauge_t stolen_value   = (gauge_t) perc.stolen;
         gauge_t combined_value = (gauge_t) perc.combined;
 
         plugin_dispatch_multivalue (&vl, 1,
